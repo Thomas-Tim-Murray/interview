@@ -18,7 +18,10 @@ private[users] class InMemoryRepository extends UserRepository {
 
   def insert(user: User): Future[Done] =
     Future.successful {
-      UserMap + (user.id → user)
+      // This was immutable, making it impossible to add or update records.
+      // While Redux-style stores have good use-cases, it seems like this
+      // is meant to be mutable, because UserMap is val.
+      UserMap += (user.id → user)
       Done
     }
 
@@ -32,6 +35,7 @@ private[users] class InMemoryRepository extends UserRepository {
       }
     }
 
-  def all(): Future[List[User]] =
+  def all(): Future[List[User]] = {
     Future.successful(UserMap.values.toList)
+  }
 }

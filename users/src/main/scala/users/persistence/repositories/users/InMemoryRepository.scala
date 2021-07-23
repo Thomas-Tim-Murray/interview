@@ -2,6 +2,7 @@ package users.persistence.repositories.users
 
 import cats.implicits._
 
+import users.domain.User.Status
 import users.domain._
 import users.persistence.repositories._
 
@@ -36,6 +37,6 @@ private[users] class InMemoryRepository extends UserRepository {
     }
 
   def all(): Future[List[User]] = {
-    Future.successful(UserMap.values.toList)
+    Future.successful(UserMap.values.toList.filter(_.status != Status.Deleted))
   }
 }
